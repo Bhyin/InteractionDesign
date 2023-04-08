@@ -1,12 +1,74 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    // app 名称
+    <string name="app_name">待办助手</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    // 主要的 activity 的名称
+    <string name="to_do">待办</string>
+    <string name="schedule">日程</string>
+    <string name="setup">设置</string>
+
+
+    // 待办窗口的一些名称
+    <string name="deadline">截止日期</string>
+    <string name="importance">重要性</string>
+    <string name="add_item">添加待办</string>
+    <string name="item_title">标题</string>
+    <string name="item_content">内容</string>
+    <string name="item_deadline">截止日期</string>
+    <string name="item_sign_date">任务开始时间</string>
+    <string name="item_importance">重要性</string>
+    <string name="yes">确认</string>
+    <string name="no">取消</string>
+
+
+    // 日程窗口的一些名称
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">时</string>
+    <string name="today">今</string>
+
+    <string name="h01">01</string>
+    <string name="h02">02</string>
+    <string name="h03">03</string>
+    <string name="h04">04</string>
+    <string name="h05">05</string>
+    <string name="h06">06</string>
+    <string name="h07">07</string>
+    <string name="h08">08</string>
+    <string name="h09">09</string>
+    <string name="h10">10</string>
+    <string name="h11">11</string>
+    <string name="h12">12</string>
+    <string name="h13">13</string>
+    <string name="h14">14</string>
+    <string name="h15">15</string>
+    <string name="h16">16</string>
+    <string name="h17">17</string>
+    <string name="h18">18</string>
+    <string name="h19">19</string>
+    <string name="h20">20</string>
+    <string name="h21">21</string>
+    <string name="h22">22</string>
+    <string name="h23">23</string>
+
+    <string name="w0">日</string>
+    <string name="w1">一</string>
+    <string name="w2">二</string>
+    <string name="w3">三</string>
+    <string name="w4">四</string>
+    <string name="w5">五</string>
+    <string name="w6">六</string>
+
+    // 设置窗口的一些名称
+    <string name="font">字体</string>
+    <string name="font_size">字号</string>
+    <string name="feed_back">意见反馈</string>
+    <string name="judge">评价</string>
+    <string name="about">关于我们</string>
+    <string name="version">版本</string>
+    <string name="service_agreement">服务协议</string>
+    <string name="privacy_agreement">隐私协议</string>
+
+
 </resources>
