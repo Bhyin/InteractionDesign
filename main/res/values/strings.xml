@@ -70,5 +70,11 @@
     <string name="service_agreement">服务协议</string>
     <string name="privacy_agreement">隐私协议</string>
 
+    // 其它东西
+    <string name="todo">TODO</string>
+    <string name="edit">Edit…</string>
+    <string name="add">Add</string>
+    <string name="item_lists">Item lists</string>
+
 
 </resources>
