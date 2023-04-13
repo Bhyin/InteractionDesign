@@ -6,13 +6,12 @@
     android:orientation="vertical"
     tools:context=".ActivityTODO">
 
-
-    <TextView
+    <ListView
+        android:id="@+id/item_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/item_lists"
-        android:textSize="24sp" />
+        android:layout_height="wrap_content">
+
+    </ListView>
 
     <EditText
         android:id="@+id/edit"
@@ -20,17 +19,30 @@
         android:layout_height="wrap_content"
         android:autofillHints=""
         android:hint="@string/edit"
-        android:minHeight="48dp" />
+        android:inputType="text"
+        android:minHeight="48sp" />
 
     <Button
         android:id="@+id/add_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add" />
 
-    <ListView
-        android:id="@+id/item_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/to_do" />
+
+    <Button
+        android:id="@+id/todo_schedule_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/schedule" />
+
+    <Button
+        android:id="@+id/todo_set_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setup" />
 
 </LinearLayout>
