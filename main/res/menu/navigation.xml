@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_todo"
+        android:title="@string/to_do"
+        android:icon="@color/white"/>
+
+    <item
+        android:id="@+id/menu_schedule"
+        android:title="@string/schedule"
+        android:icon="@color/white"/>
+
+    <item
+        android:id="@+id/menu_setup"
+        android:title="@string/setup"
+        android:icon="@color/white"/>
+
+
+
+</menu>
