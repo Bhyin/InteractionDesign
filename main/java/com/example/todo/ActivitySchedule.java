@@ -1,35 +1,47 @@
 package com.example.todo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ActivitySchedule extends AppCompatActivity {
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
-        Button todo_button = findViewById(R.id.schedule_todo_button);
-        Button set_button = findViewById(R.id.schedule_set_button);
+        initView();
+    }
 
-        todo_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ActivitySchedule.this, ActivityTODO.class);
-                startActivity(intent);
-            }
-        });
+    private void initView(){
+        bottomNavigationView=findViewById(R.id.schedule_navigation);
 
-        set_button.setOnClickListener(new View.OnClickListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ActivitySchedule.this, ActivitySetUp.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+                switch (item.getItemId()) {
+                    case R.id.menu_todo:
+                        intent = new Intent(ActivitySchedule.this, ActivityTODO.class);
+                        startActivity(intent);
+                        return true;
+                    case R.id.menu_schedule:
+                        return true;
+                    case R.id.menu_setup:
+                        intent = new Intent(ActivitySchedule.this, ActivitySetUp.class);
+                        startActivity(intent);
+                        return true;
+                }
+                return false;
             }
         });
     }
