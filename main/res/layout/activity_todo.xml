@@ -1,48 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ActivityTODO">
+    android:layout_height="match_parent">
+
+    <!--顶部菜单-->
+    <LinearLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:padding="16dp">
+        <!--下拉菜单-->
+        <Spinner
+            android:id="@+id/sort_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/sort_options"
+            android:minHeight="48dp"
+            android:prompt="@string/sort_option" />
+        <!--切换升序/降序-->
+        <ToggleButton
+            android:id="@+id/sort_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="升序"
+            android:textOn="降序" />
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/item_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </ListView>
-
-    <EditText
-        android:id="@+id/edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:hint="@string/edit"
-        android:inputType="text"
-        android:minHeight="48sp" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/menu_layout" />
 
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"
+        android:layout_marginStart="300dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/add" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/to_do" />
 
-    <Button
-        android:id="@+id/todo_schedule_button"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/todo_navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/schedule" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/navigation" />
 
-    <Button
-        android:id="@+id/todo_set_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setup" />
-
-</LinearLayout>
+</RelativeLayout>

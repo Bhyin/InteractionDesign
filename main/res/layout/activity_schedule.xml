@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,25 +7,16 @@
     android:orientation="vertical"
     tools:context=".ActivitySchedule">
 
-    <View
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/schedule_navigation"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
-
-    <Button
-        android:id="@+id/schedule_todo_button"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/to_do" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/navigation" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/schedule" />
 
-    <Button
-        android:id="@+id/schedule_set_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setup" />
 
-</LinearLayout>
+</RelativeLayout>

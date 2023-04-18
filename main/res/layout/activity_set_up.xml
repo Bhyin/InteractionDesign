@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -57,21 +57,14 @@
         android:text="@string/version"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/set_todo_button"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/setup_navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/to_do" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/navigation" />
 
-    <Button
-        android:id="@+id/set_schedule_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/schedule" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setup" />
-
-</LinearLayout>
+</RelativeLayout>
