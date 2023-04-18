@@ -19,7 +19,7 @@
     <string name="item_importance">重要性</string>
     <string name="yes">确认</string>
     <string name="no">取消</string>
-
+    <string name="sort_option">排序方式</string>
 
     // 日程窗口的一些名称
     <string name="year">年</string>
