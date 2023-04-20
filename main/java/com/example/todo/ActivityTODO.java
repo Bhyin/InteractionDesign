@@ -2,12 +2,12 @@ package com.example.todo;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,7 +38,7 @@ public class ActivityTODO extends AppCompatActivity {
     // 条目列表
     private List<Item> itemList;
     // 列表适配器
-    private MyAdapter adapter;
+    private ItemAdapter adapter;
     // 是否降序
     private boolean isDescending = false;
     // 底部导航栏
@@ -49,7 +49,7 @@ public class ActivityTODO extends AppCompatActivity {
     private EditText contentEditText; // 输入内容
     private TimePicker timePicker;// 日期时间选项卡
     private SeekBar seekBar;// 重要性选择滑动条
-    private Button addButton;
+    private Button addButton;// 添加按钮
 
 
     @Override
@@ -68,7 +68,12 @@ public class ActivityTODO extends AppCompatActivity {
     }
 
     private void initData() {
-        itemList = new ArrayList<>();
+        itemList = readListFromFile();
+//        itemList.add(new Item("dav", "a", "10:37", 2));
+//        itemList.add(new Item("areas", "b", "15:53", 4));
+//        itemList.add(new Item("novelists", "c", "23:29", 3));
+//        itemList.add(new Item("graphic", "dd", "18:43", 1));
+
     }
 
     private void initView() {
@@ -109,6 +114,14 @@ public class ActivityTODO extends AppCompatActivity {
             }
         });
 
+        // 单个条目的点击事件
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                showItemDialog(position);
+            }
+        });
+
         // 底部菜单栏的点击事件
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
@@ -117,27 +130,69 @@ public class ActivityTODO extends AppCompatActivity {
                 Intent intent;
                 switch (item.getItemId()) {
                     case R.id.menu_todo:
+                        saveListToFile();
                         return true;
                     case R.id.menu_schedule:
                         intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
                         startActivity(intent);
+                        saveListToFile();
                         return true;
                     case R.id.menu_setup:
                         intent = new Intent(ActivityTODO.this, ActivitySetUp.class);
                         startActivity(intent);
+                        saveListToFile();
                         return true;
                 }
                 return false;
             }
         });
-        bottomNavigationView.setSelectedItemId(R.id.menu_todo);
+        bottomNavigationView.setSelectedItemId(R.id.menu_todo); // 底部菜单栏默认选择待办页面
 
+        // 添加按钮的点击事件
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCustomDialog();
             }
         });
+    }
+
+    // 创建一个提示框，用来显示条目的详情。
+    @SuppressLint("SetTextI18n")
+    private void showItemDialog(final int position) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.item_dialog);
+
+        TextView title = dialog.findViewById(R.id.item_title);
+        TextView content = dialog.findViewById(R.id.item_content);
+        TextView deadline = dialog.findViewById(R.id.item_deadline);
+        TextView importance = dialog.findViewById(R.id.item_importance);
+
+        title.setText(itemList.get(position).title);
+        content.setText(itemList.get(position).content);
+        deadline.setText(itemList.get(position).deadline);
+        importance.setText(itemList.get(position).importance + "");
+
+        Button deleteButton = dialog.findViewById(R.id.delete_button);
+        Button returnButton = dialog.findViewById(R.id.return_button);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemList.remove(position);
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }
+        });
+
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     // 创建一个提示框，用来输入待办信息
@@ -199,7 +254,7 @@ public class ActivityTODO extends AppCompatActivity {
 
 
     private void initListView() {
-        adapter = new MyAdapter(ActivityTODO.this, itemList);
+        adapter = new ItemAdapter(ActivityTODO.this, itemList);
         listView.setAdapter(adapter);
     }
 
@@ -225,26 +280,54 @@ public class ActivityTODO extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private static class MyAdapter extends ArrayAdapter<Item> {
+    public void saveListToFile() {
 
-        public MyAdapter(@NonNull ActivityTODO context, List<Item> itemList) {
-            super(context, 0, itemList);
+        SharedPreferences sharedPreferences = getSharedPreferences("item_data", Context.MODE_PRIVATE);
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        for (Item item : itemList) {
+
+            int w = 2;
+            String[] parts = item.deadline.split(":");
+            String t = parts[0];
+
+            editor.putString(w + "_" + t + "_title", item.title);
+            editor.putString(w + "_" + t + "_content", item.content);
+            editor.putString(w + "_" + t + "_deadline", item.deadline);
+            editor.putInt(w + "_" + t + "_importance", item.importance);
+
         }
+        editor.apply();
+    }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
+    public List<Item> readListFromFile() {
+        SharedPreferences sharedPreferences = getSharedPreferences("item_data", Context.MODE_PRIVATE);
+
+        List<Item> itemList = new ArrayList<>();
+        String[] weekdays = {"0", "1", "2", "3", "4", "5", "6"};
+        String[] times = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
+                "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+
+        for (String w : weekdays) {
+            for (String t : times) {
+                String title = sharedPreferences.getString(w + "_" + t + "_title", "");
+                if (title.equals("")) continue;
+                String content = sharedPreferences.getString(w + "_" + t + "_content", "");
+                String deadline = sharedPreferences.getString(w + "_" + t + "_deadline", "01:00");
+                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
+
+//                System.out.println("The weekday is " + w + ",\n and the time is " + t);
+//
+//                System.out.println("The content is really " + sharedPreferences.getString(w + "_" + t + "_content", "01:00"));
+//                System.out.println("The deadline is really " + sharedPreferences.getString(w + "_" + t + "_deadline", "01:00"));
+//                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++");
+
+                itemList.add(new Item(title, content, deadline, importance));
             }
 
-            TextView leftText = convertView.findViewById(R.id.left_text);
-            TextView rightText = convertView.findViewById(R.id.right_text);
-
-            Item item = getItem(position);
-
-            leftText.setText(item.title);
-            rightText.setText(item.deadline);
-            return convertView;
         }
+        return itemList;
+
     }
+
 }
