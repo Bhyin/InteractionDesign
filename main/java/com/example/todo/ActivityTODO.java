@@ -1,7 +1,9 @@
 package com.example.todo;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 
@@ -51,6 +54,10 @@ public class ActivityTODO extends AppCompatActivity {
     private SeekBar seekBar;// 重要性选择滑动条
     private Button addButton;// 添加按钮
 
+    // 提醒功能
+    private AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +80,33 @@ public class ActivityTODO extends AppCompatActivity {
 //        itemList.add(new Item("areas", "b", "15:53", 4));
 //        itemList.add(new Item("novelists", "c", "23:29", 3));
 //        itemList.add(new Item("graphic", "dd", "18:43", 1));
+
+        Calendar calendar = Calendar.getInstance();
+
+        // 为每一个条目设置闹钟
+        for (Item item : itemList) {
+            String[] parts = item.deadline.split(":");
+            // 获取item的deadline对应的时间戳
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            long triggerTime = calendar.getTimeInMillis();
+
+            // TODO 设置闹钟
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, AlarmReceiver.class);
+
+            // 传递字符串
+            intent.putExtra("title", item.title);
+            intent.putExtra("content", item.content);
+
+            alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, alarmIntent);
+        }
 
     }
 
@@ -131,16 +165,19 @@ public class ActivityTODO extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menu_todo:
                         saveListToFile();
+                        closeAlarm();
                         return true;
                     case R.id.menu_schedule:
+                        saveListToFile();
+                        closeAlarm();
                         intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
                         startActivity(intent);
-                        saveListToFile();
                         return true;
                     case R.id.menu_setup:
+                        saveListToFile();
+                        closeAlarm();
                         intent = new Intent(ActivityTODO.this, ActivitySetUp.class);
                         startActivity(intent);
-                        saveListToFile();
                         return true;
                 }
                 return false;
@@ -250,6 +287,10 @@ public class ActivityTODO extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    private void closeAlarm() {
+        alarmManager.cancel(alarmIntent);
     }
 
 
