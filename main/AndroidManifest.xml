@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--赋予文件读取权限-->
+    <!-- 赋予文件读取权限 -->
+    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-
 
     <application
         android:allowBackup="true"
@@ -17,15 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TODO"
         tools:targetApi="31">
-
         <activity
             android:name=".ActivitySetUp"
             android:exported="false" />
-
         <activity
             android:name=".ActivitySchedule"
             android:exported="false" />
-
         <activity
             android:name=".ActivityTODO"
             android:exported="true">
