@@ -6,6 +6,7 @@
     <string name="to_do">待办</string>
     <string name="schedule">日程</string>
     <string name="setup">设置</string>
+    <string name="file_name">todo.do</string>
 
 
     // 待办窗口的一些名称
@@ -51,6 +52,7 @@
     <string name="h21">21</string>
     <string name="h22">22</string>
     <string name="h23">23</string>
+    <string name="h24">00</string>
 
     <string name="w0">日</string>
     <string name="w1">一</string>
