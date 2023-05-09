@@ -6,6 +6,12 @@
     android:background="@color/black"
     android:orientation="horizontal">
 
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        tools:ignore="VisualLintBounds,TouchTargetSizeCheck" />
+
     <TextView
         android:id="@+id/left_text"
         android:layout_width="wrap_content"
