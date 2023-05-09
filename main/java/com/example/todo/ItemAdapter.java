@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +23,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
     private final List<Item> itemList;
 
-    private int startColor;
-    private int endColor;
+    private int[] importanceColors;
 
 
     public ItemAdapter(@NonNull Context context, List<Item> itemList) {
@@ -39,38 +40,45 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             convertView = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
         }
 
-        // 最低的importance是绿色，最高的是红色
-        startColor = Color.GREEN;
-        endColor = Color.RED;
-        // 计算出其它importance对应的颜色
-        int[] colors = new int[5];
+        importanceColors = new int[5];
+        float[] temp = new float[3];
 
-        float[] hsvStartColor = new float[3];
-        float[] hsvEndColor = new float[3];
-
-        // 转化为hsv格式
-        Color.colorToHSV(startColor, hsvStartColor);
-        Color.colorToHSV(endColor, hsvEndColor);
-
-        // 计算渐变颜色，有5个层次对应五个importance
-        float[] hsv = new float[3];
-        // 计算变化量
-        float deltaH = (hsvStartColor[0] - hsvEndColor[0]) / 4;
-        float deltaS = (hsvStartColor[1] - hsvEndColor[1]) / 4;
-        float deltaV = (hsvStartColor[2] - hsvEndColor[2]) / 4;
-        // 插值
+        // 为不同的importance设置不同的颜色
         for (int i = 0; i < 5; i++) {
-            hsv[0] = hsvStartColor[0] + i * deltaH;
-            hsv[1] = hsvStartColor[1] + i * deltaS;
-            hsv[2] = hsvStartColor[2] + i * deltaV;
-            colors[i] = Color.HSVToColor(hsv);
+            temp[0] = 30 * i;
+            temp[1] = 100;
+            temp[2] = 100;
+            importanceColors[i] = Color.HSVToColor(temp);
         }
 
         // 设置渐变的颜色
-        int[] gradientColor = {colors[itemList.get(position).importance], Color.WHITE};
-        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
+        final int[] gradientColor = {importanceColors[itemList.get(position).importance], Color.WHITE};
+        final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
         convertView.setBackground(gradientDrawable);
 
+        // 视图左边的选项框，勾选后会修改排序的逻辑
+        CheckBox checkBox = convertView.findViewById(R.id.checkbox);
+        View finalConvertView = convertView;
+        View finalConvertView1 = convertView;
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)// 勾选
+                {
+                    final int[] gradientColor = {Color.GRAY, Color.WHITE};
+                    final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
+                    finalConvertView.setBackground(gradientDrawable);
+                }
+                else{
+                    // 设置渐变的颜色
+                    final int[] gradientColor = {importanceColors[itemList.get(position).importance], Color.WHITE};
+                    final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
+                    finalConvertView1.setBackground(gradientDrawable);
+                }
+            }
+        });
+
+        // 设置条目的内容
         TextView title = convertView.findViewById(R.id.left_text);
         TextView deadline = convertView.findViewById(R.id.right_text);
 
