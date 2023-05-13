@@ -68,8 +68,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                     final int[] gradientColor = {Color.GRAY, Color.WHITE};
                     final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
                     finalConvertView.setBackground(gradientDrawable);
-                }
-                else{
+                } else {
                     // 设置渐变的颜色
                     final int[] gradientColor = {importanceColors[itemList.get(position).importance], Color.WHITE};
                     final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
@@ -83,7 +82,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView deadline = convertView.findViewById(R.id.right_text);
 
         title.setText(itemList.get(position).title);
-        deadline.setText(itemList.get(position).deadline);
+        deadline.setText(itemList.get(position).CountTimeStr());
         return convertView;
     }
 }

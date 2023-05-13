@@ -2,8 +2,10 @@ package com.example.todo;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -50,7 +53,8 @@ public class ActivityTODO extends AppCompatActivity {
     // 输入按钮
     private EditText titleEditText; // 输入标题
     private EditText contentEditText; // 输入内容
-    private TimePicker timePicker;// 日期时间选项卡
+    private Button addDate;
+    private Button addTime;
     private SeekBar seekBar;// 重要性选择滑动条
     private Button addButton;// 添加按钮
 
@@ -85,27 +89,27 @@ public class ActivityTODO extends AppCompatActivity {
 
         // 为每一个条目设置闹钟
         for (Item item : itemList) {
-            String[] parts = item.deadline.split(":");
             // 获取item的deadline对应的时间戳
-            int hour = Integer.parseInt(parts[0]);
-            int minute = Integer.parseInt(parts[1]);
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.YEAR, item.deadline[0]);
+            calendar.set(Calendar.MONTH, item.deadline[1]);
+            calendar.set(Calendar.DAY_OF_MONTH, item.deadline[2]);
+            calendar.set(Calendar.HOUR_OF_DAY, item.deadline[3]);
+            calendar.set(Calendar.MINUTE, item.deadline[4]);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             long triggerTime = calendar.getTimeInMillis();
 
-            // TODO 设置闹钟
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(this, AlarmReceiver.class);
-
-            // 传递字符串
-            intent.putExtra("title", item.title);
-            intent.putExtra("content", item.content);
-
-            alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, alarmIntent);
+//            // TODO 设置闹钟
+//            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//            Intent intent = new Intent(this, AlarmReceiver.class);
+//
+//            // 传递字符串
+//            intent.putExtra("title", item.title);
+//            intent.putExtra("content", item.content);
+//
+//            alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+//
+//            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, alarmIntent);
         }
 
     }
@@ -190,9 +194,13 @@ public class ActivityTODO extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showCustomDialog();
+
             }
         });
     }
+
+    // 计算date1距离date2还剩几天几个小时
+
 
     // 创建一个提示框，用来显示条目的详情。
     @SuppressLint("SetTextI18n")
@@ -207,8 +215,9 @@ public class ActivityTODO extends AppCompatActivity {
 
         title.setText(itemList.get(position).title);
         content.setText(itemList.get(position).content);
-        deadline.setText(itemList.get(position).deadline);
-        importance.setText(itemList.get(position).importance + "");
+
+        deadline.setText(itemList.get(position).getDeadLineStr());
+        importance.setText(Item.imp_str[itemList.get(position).importance]);
 
         Button deleteButton = dialog.findViewById(R.id.delete_button);
         Button returnButton = dialog.findViewById(R.id.return_button);
@@ -233,6 +242,7 @@ public class ActivityTODO extends AppCompatActivity {
     }
 
     // 创建一个提示框，用来输入待办信息
+    @SuppressLint("SetTextI18n")
     private void showCustomDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.add_dialog);
@@ -241,12 +251,95 @@ public class ActivityTODO extends AppCompatActivity {
         // 获取提示框控件
         titleEditText = dialog.findViewById(R.id.title_edit_text);
         contentEditText = dialog.findViewById(R.id.content_edit_text);
-        timePicker = dialog.findViewById(R.id.time_picker);
+        addDate = dialog.findViewById(R.id.add_date);
+        addTime = dialog.findViewById(R.id.add_time);
         seekBar = dialog.findViewById(R.id.seek_bar);
+
+        // 用于显示当前选择的日期和时间
+        TextView dateView = dialog.findViewById(R.id.date_text);
+        TextView timeView = dialog.findViewById(R.id.time_text);
+
+        // 选择日期和时间
+        final Calendar c = Calendar.getInstance();
+        final int[] tYear = {c.get(Calendar.YEAR)};
+        final int[] tMonth = {c.get(Calendar.MONTH)};
+        final int[] tDay = {c.get(Calendar.DAY_OF_MONTH)};
+
+        dateView.setText(tYear[0] + ":" + tMonth[0] + ":" + tDay[0]);
+
+        addDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatePickerDialog datePickDialog = new DatePickerDialog(ActivityTODO.this, new DatePickerDialog.OnDateSetListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // 选择日期之后的操作
+                        tYear[0] = year;
+                        tMonth[0] = month;
+                        tDay[0] = dayOfMonth;
+
+                        dateView.setText(tYear[0] + ":" + tMonth[0] + ":" + tDay[0]);
+                    }
+                }, tYear[0], tMonth[0], tDay[0]);
+                datePickDialog.show();
+            }
+        });
+
+
+        final int[] tHour = {c.get(Calendar.HOUR_OF_DAY)};
+        final int[] tMinute = {c.get(Calendar.MINUTE)};
+
+        timeView.setText(tHour[0] + ":" + tMinute[0]);
+
+        addTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ActivityTODO.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                tHour[0] = hourOfDay;
+                                tMinute[0] = minute;
+                                timeView.setText(tHour[0] + ":" + tMinute[0]);
+                            }
+                        }, tHour[0], tMinute[0], true);
+                timePickerDialog.show();
+            }
+        });
+
+        int[] deadline = new int[5];
+        deadline[0] = tYear[0];
+        deadline[1] = tMonth[0];
+        deadline[2] = tDay[0];
+        deadline[3] = tHour[0];
+        deadline[4] = tMinute[0];
 
         // 设置seekbar的最大值和初始值
         seekBar.setMax(4);
         seekBar.setProgress(0);
+
+
+        TextView addImportance = dialog.findViewById(R.id.add_importance);
+        addImportance.setText("重要性: " + Item.imp_str[0]);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                addImportance.setText("重要性：" + Item.imp_str[progress]);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         // 对话框的确认和返回按钮
         Button cancelButton = dialog.findViewById(R.id.cancel_button);
@@ -276,12 +369,10 @@ public class ActivityTODO extends AppCompatActivity {
                         else title = content;
                     }
                 }
-                int hour = timePicker.getCurrentHour();
-                int minute = timePicker.getCurrentMinute();
                 int progress = seekBar.getProgress();
 
                 // TODO 处理输入的value
-                itemList.add(new Item(title, content, hour + ":" + minute, progress));
+                itemList.add(new Item(title, content, deadline, progress));
                 sortData(sortSpinner.getSelectedItemPosition());
                 dialog.dismiss();
             }
@@ -290,7 +381,7 @@ public class ActivityTODO extends AppCompatActivity {
     }
 
     private void closeAlarm() {
-        alarmManager.cancel(alarmIntent);
+//        alarmManager.cancel(alarmIntent);
     }
 
 
@@ -305,7 +396,7 @@ public class ActivityTODO extends AppCompatActivity {
                 itemList.sort(new Comparator<Item>() {
                     @Override
                     public int compare(Item item, Item t1) {
-                        return isDescending ? item.deadline.compareTo(t1.deadline) : t1.deadline.compareTo(item.deadline);
+                        return isDescending ? item.isEarly(t1.deadline) : t1.isEarly(item.deadline);
                     }
                 });
                 break;
@@ -328,13 +419,17 @@ public class ActivityTODO extends AppCompatActivity {
 
         for (Item item : itemList) {
 
-            int w = 2;
-            String[] parts = item.deadline.split(":");
-            String t = parts[0];
+            int w = item.getDayOfWeek();
+
+            int t = item.deadline[3];
 
             editor.putString(w + "_" + t + "_title", item.title);
             editor.putString(w + "_" + t + "_content", item.content);
-            editor.putString(w + "_" + t + "_deadline", item.deadline);
+            editor.putString(w + "_" + t + "_deadline_year", String.valueOf(item.deadline[0]));
+            editor.putString(w + "_" + t + "_deadline_month", String.valueOf(item.deadline[1]));
+            editor.putString(w + "_" + t + "_deadline_day", String.valueOf(item.deadline[2]));
+            editor.putString(w + "_" + t + "_deadline_hour", String.valueOf(item.deadline[3]));
+            editor.putString(w + "_" + t + "_deadline_minute", String.valueOf(item.deadline[4]));
             editor.putInt(w + "_" + t + "_importance", item.importance);
 
         }
@@ -346,7 +441,7 @@ public class ActivityTODO extends AppCompatActivity {
 
         List<Item> itemList = new ArrayList<>();
         String[] weekdays = {"0", "1", "2", "3", "4", "5", "6"};
-        String[] times = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
+        String[] times = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
                 "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
 
         for (String w : weekdays) {
@@ -354,14 +449,15 @@ public class ActivityTODO extends AppCompatActivity {
                 String title = sharedPreferences.getString(w + "_" + t + "_title", "");
                 if (title.equals("")) continue;
                 String content = sharedPreferences.getString(w + "_" + t + "_content", "");
-                String deadline = sharedPreferences.getString(w + "_" + t + "_deadline", "01:00");
-                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
 
-//                System.out.println("The weekday is " + w + ",\n and the time is " + t);
-//
-//                System.out.println("The content is really " + sharedPreferences.getString(w + "_" + t + "_content", "01:00"));
-//                System.out.println("The deadline is really " + sharedPreferences.getString(w + "_" + t + "_deadline", "01:00"));
-//                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++");
+                int[] deadline = new int[5];
+                deadline[0] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_year", "0"));
+                deadline[1] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_month", "0"));
+                deadline[2] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_day", "0"));
+                deadline[3] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_hour", "0"));
+                deadline[4] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_minute", "0"));
+
+                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
 
                 itemList.add(new Item(title, content, deadline, importance));
             }

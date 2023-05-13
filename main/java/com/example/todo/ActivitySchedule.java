@@ -74,9 +74,8 @@ public class ActivitySchedule extends AppCompatActivity {
         }
 
         for (Item item : itemList) {
-            int w = 2;
-            String[] parts = item.deadline.split(":");
-            int h = Integer.parseInt(parts[0]);
+            int w = item.getDayOfWeek();
+            int h = item.deadline[3];
             calendarCells[h][w].setText(item.title);
         }
         // TODO 设置周历滑动事件
@@ -88,7 +87,7 @@ public class ActivitySchedule extends AppCompatActivity {
 
         List<Item> itemList = new ArrayList<>();
         String[] weekdays = {"0", "1", "2", "3", "4", "5", "6"};
-        String[] times = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
+        String[] times = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
                 "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
 
         for (String w : weekdays) {
@@ -96,14 +95,15 @@ public class ActivitySchedule extends AppCompatActivity {
                 String title = sharedPreferences.getString(w + "_" + t + "_title", "");
                 if (title.equals("")) continue;
                 String content = sharedPreferences.getString(w + "_" + t + "_content", "");
-                String deadline = sharedPreferences.getString(w + "_" + t + "_deadline", "01:00");
-                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
 
-//                System.out.println("The weekday is " + w + ",\n and the time is " + t);
-//
-//                System.out.println("The content is really " + sharedPreferences.getString(w + "_" + t + "_content", "01:00"));
-//                System.out.println("The deadline is really " + sharedPreferences.getString(w + "_" + t + "_deadline", "01:00"));
-//                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++");
+                int[] deadline = new int[5];
+                deadline[0] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_year", "0"));
+                deadline[1] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_month", "0"));
+                deadline[2] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_day", "0"));
+                deadline[3] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_hour", "0"));
+                deadline[4] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_minute", "0"));
+
+                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
 
                 itemList.add(new Item(title, content, deadline, importance));
             }
