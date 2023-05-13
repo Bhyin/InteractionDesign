@@ -19,11 +19,31 @@
         android:hint="待办内容"
         android:minHeight="48dp" />
 
-    <TimePicker
-        android:id="@+id/time_picker"
+    <TextView
+        android:id="@+id/date_text"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_margin="16dp" />
+        android:layout_height="wrap_content"
+        android:minHeight="48sp"/>
+
+    <Button
+        android:id="@+id/add_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加日期"
+        android:textSize="36sp"/>
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48sp"/>
+
+    <Button
+        android:id="@+id/add_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加时间"
+        android:textSize="36sp"/>
 
     <SeekBar
         android:id="@+id/seek_bar"
