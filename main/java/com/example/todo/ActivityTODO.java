@@ -174,7 +174,8 @@ public class ActivityTODO extends AppCompatActivity {
                     case R.id.menu_schedule:
                         saveListToFile();
                         closeAlarm();
-                        intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
+//                        intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
+                        intent = new Intent(ActivityTODO.this, TestNewSchedule.class);
                         startActivity(intent);
                         return true;
                     case R.id.menu_setup:
@@ -198,8 +199,6 @@ public class ActivityTODO extends AppCompatActivity {
             }
         });
     }
-
-    // 计算date1距离date2还剩几天几个小时
 
 
     // 创建一个提示框，用来显示条目的详情。

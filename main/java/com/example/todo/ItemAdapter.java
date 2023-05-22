@@ -23,14 +23,13 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
     private final List<Item> itemList;
 
-    private int[] importanceColors;
+//    private int[] importanceColors;
 
 
     public ItemAdapter(@NonNull Context context, List<Item> itemList) {
         super(context, 0, itemList);
         this.context = context;
         this.itemList = itemList;
-
     }
 
     @NonNull
@@ -40,19 +39,24 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             convertView = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
         }
 
-        importanceColors = new int[5];
-        float[] temp = new float[3];
+//        importanceColors = new int[5];
+//        float[] temp = new float[3];
+//
+//        // 为不同的importance设置不同的颜色
+//        for (int i = 0; i < 5; i++) {
+//            temp[0] = 30 * i;
+//            temp[1] = 100;
+//            temp[2] = 100;
+//            importanceColors[i] = Color.HSVToColor(temp);
+//        }
 
-        // 为不同的importance设置不同的颜色
-        for (int i = 0; i < 5; i++) {
-            temp[0] = 30 * i;
-            temp[1] = 100;
-            temp[2] = 100;
-            importanceColors[i] = Color.HSVToColor(temp);
-        }
+//        System.out.println("颜色列表如下所示");
+//        for (int i = 0; i < 5; ++i) {
+//            System.out.println("第" + i + "个颜色是：" + importanceColors[i]);
+//        }
 
         // 设置渐变的颜色
-        final int[] gradientColor = {importanceColors[itemList.get(position).importance], Color.WHITE};
+        final int[] gradientColor = {Item.imp_clr[itemList.get(position).importance], Color.WHITE};
         final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
         convertView.setBackground(gradientDrawable);
 
@@ -70,7 +74,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                     finalConvertView.setBackground(gradientDrawable);
                 } else {
                     // 设置渐变的颜色
-                    final int[] gradientColor = {importanceColors[itemList.get(position).importance], Color.WHITE};
+                    final int[] gradientColor = {Item.imp_clr[itemList.get(position).importance], Color.WHITE};
                     final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
                     finalConvertView1.setBackground(gradientDrawable);
                 }

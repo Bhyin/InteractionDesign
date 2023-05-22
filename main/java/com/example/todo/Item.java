@@ -7,6 +7,9 @@ public class Item {
      * 待办条目
      * */
     public static String[] imp_str = {"不重要", "一般", "比较重要", "重要", "非常重要"};
+
+    // 重要性对应的颜色不再有ItemAdapter计算，而是计算好之后存储起来，直接使用。
+    public static int[] imp_clr = {-65535, -32768, -256, -8323328, -16711936};
     public String title;//标题
     public String content;//内容
     public int[] deadline;//截止日期
