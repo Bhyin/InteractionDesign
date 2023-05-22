@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="添加日期"
-        android:textSize="36sp"/>
+        android:textSize="24sp"/>
 
     <TextView
         android:id="@+id/time_text"
@@ -43,7 +43,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="添加时间"
-        android:textSize="36sp"/>
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/add_importance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="重要性"
+        android:textSize="24sp"
+        />
 
     <SeekBar
         android:id="@+id/seek_bar"

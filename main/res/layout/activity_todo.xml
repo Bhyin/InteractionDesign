@@ -20,7 +20,8 @@
             android:layout_weight="1"
             android:entries="@array/sort_options"
             android:minHeight="48dp"
-            android:prompt="@string/sort_option" />
+            android:prompt="@string/sort_option"
+            tools:ignore="TouchTargetSizeCheck" />
         <!--切换升序/降序-->
         <ToggleButton
             android:id="@+id/sort_toggle"
@@ -28,7 +29,8 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:textOff="升序"
-            android:textOn="降序" />
+            android:textOn="降序"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
 
