@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="40sp"
-    android:background="@color/black"
+    android:background="@drawable/shape"
     android:orientation="horizontal">
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
         android:focusable="false"
+        android:gravity="center"
         tools:ignore="VisualLintBounds,TouchTargetSizeCheck" />
 
     <TextView
@@ -18,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="32sp"
-        android:gravity="center_horizontal" />
+        android:gravity="center" />
     <TextView
         android:id="@+id/right_text"
         android:layout_width="match_parent"

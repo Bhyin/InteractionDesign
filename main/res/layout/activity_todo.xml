@@ -21,6 +21,7 @@
             android:entries="@array/sort_options"
             android:minHeight="48dp"
             android:prompt="@string/sort_option"
+            android:gravity="center"
             tools:ignore="TouchTargetSizeCheck" />
         <!--切换升序/降序-->
         <ToggleButton
@@ -28,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
+            android:gravity="center"
             android:textOff="升序"
             android:textOn="降序"
             tools:ignore="TouchTargetSizeCheck" />
@@ -38,6 +40,8 @@
         android:id="@+id/item_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="#00000000"
+        android:dividerHeight="10dp"
         android:layout_below="@id/menu_layout" />
 
     <Button
@@ -48,6 +52,7 @@
         android:layout_marginStart="300dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="16dp"
+        android:gravity="center"
         android:text="@string/add" />
 
 
@@ -56,8 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/black"
-        app:itemIconTint="@color/white"
+        android:background="@color/light_green"
+        app:itemIconTint="@color/dark_black"
         app:itemTextColor="@color/white"
         app:menu="@menu/navigation" />
 
