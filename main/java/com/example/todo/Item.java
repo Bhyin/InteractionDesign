@@ -1,5 +1,6 @@
 package com.example.todo;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class Item {
@@ -20,6 +21,46 @@ public class Item {
         content = c;
         deadline = d;
         importance = i;
+    }
+
+    public Item() {
+        title = "";
+        content = "";
+        deadline = new int[5];
+        importance = 0;
+    }
+
+    public String str() {
+        return title + " " + content + " " + Arrays.toString(deadline) + " " + importance;
+    }
+
+    public String toJsonString() {
+        Json json = new Json();
+        json.put("title", title);
+        json.put("content", content);
+        json.put("deadline_year", String.valueOf(deadline[0]));
+        json.put("deadline_month", String.valueOf(deadline[1]));
+        json.put("deadline_day", String.valueOf(deadline[2]));
+        json.put("deadline_hour", String.valueOf(deadline[3]));
+        json.put("deadline_minute", String.valueOf(deadline[4]));
+        json.put("importance", String.valueOf(importance));
+        return json.toString();
+    }
+
+
+
+    public static Item parseJson(String jsonStr) {
+        Item item = new Item();
+        Json json = Json.parse(jsonStr);
+        item.title = json.get("title");
+        item.content = json.get("content");
+        item.deadline[0] = Integer.parseInt(json.get("deadline_year"));
+        item.deadline[1] = Integer.parseInt(json.get("deadline_month"));
+        item.deadline[2] = Integer.parseInt(json.get("deadline_day"));
+        item.deadline[3] = Integer.parseInt(json.get("deadline_hour"));
+        item.deadline[4] = Integer.parseInt(json.get("deadline_minute"));
+        item.importance = Integer.parseInt(json.get("importance"));
+        return item;
     }
 
     public int isEarly(int[] date) {

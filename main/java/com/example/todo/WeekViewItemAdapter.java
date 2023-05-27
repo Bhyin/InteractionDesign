@@ -3,6 +3,7 @@ package com.example.todo;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,10 @@ public class WeekViewItemAdapter extends ArrayAdapter<WeekViewItem> {
         w[5] = convertView.findViewById(R.id.week_item_5);
         w[6] = convertView.findViewById(R.id.week_item_6);
 
+        resetTextView(w);
+
         WeekViewItem weekViewItem = weekViewItemList.get(position);
+        System.out.println("Position: " + position);
 
         hour.setText(weekViewItem.time + "");
 
@@ -52,7 +56,7 @@ public class WeekViewItemAdapter extends ArrayAdapter<WeekViewItem> {
             Item item = weekViewItem.items[i];
             if (item != null) {
                 // 设置textview的内容
-                w[i].setText(item.title);
+                w[i].setText(item.title + position + i);
 
                 // 按照紧急程度设置textview的颜色
                 w[i].setBackgroundColor(Item.imp_clr[item.importance]);
@@ -69,6 +73,19 @@ public class WeekViewItemAdapter extends ArrayAdapter<WeekViewItem> {
         }
 
         return convertView;
+    }
+
+    @SuppressLint("ResourceAsColor")
+    void resetTextView(TextView[] textViews) {
+        for (TextView textView : textViews) {
+            textView.setBackgroundColor(Color.WHITE);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
     // 创建一个提示框，用来显示条目的详情。

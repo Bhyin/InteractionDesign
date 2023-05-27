@@ -62,11 +62,16 @@ public class ActivityTODO extends AppCompatActivity {
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
 
+    // 文件读写
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
+
+        initSharedPreferences();
 
         // 初始化数据
         initData();
@@ -78,13 +83,18 @@ public class ActivityTODO extends AppCompatActivity {
         initListView();
     }
 
+    void initSharedPreferences() {
+        sharedPreferences = getSharedPreferences("item_data", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+    }
+
+
     private void initData() {
         itemList = readListFromFile();
-//        itemList.add(new Item("dav", "a", "10:37", 2));
-//        itemList.add(new Item("areas", "b", "15:53", 4));
-//        itemList.add(new Item("novelists", "c", "23:29", 3));
-//        itemList.add(new Item("graphic", "dd", "18:43", 1));
-
+//        itemList.add(new Item("aaa", "aaaaa", new int[]{1, 2, 3, 4, 5}, 0));
+//        itemList.add(new Item("bbb", "bbbbb", new int[]{12, 4, 12, 12, 52}, 3));
+//        itemList.add(new Item("ccc", "ccccc", new int[]{18, 8, 28, 18, 58}, 4));
+        System.out.println("Read File" + itemList.size());
         Calendar calendar = Calendar.getInstance();
 
         // 为每一个条目设置闹钟
@@ -168,14 +178,12 @@ public class ActivityTODO extends AppCompatActivity {
                 Intent intent;
                 switch (item.getItemId()) {
                     case R.id.menu_todo:
-                        saveListToFile();
                         closeAlarm();
                         return true;
                     case R.id.menu_schedule:
                         saveListToFile();
                         closeAlarm();
-//                        intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
-                        intent = new Intent(ActivityTODO.this, TestNewSchedule.class);
+                        intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
                         startActivity(intent);
                         return true;
                     case R.id.menu_setup:
@@ -195,7 +203,6 @@ public class ActivityTODO extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showCustomDialog();
-
             }
         });
     }
@@ -411,59 +418,26 @@ public class ActivityTODO extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+
     public void saveListToFile() {
-
-        SharedPreferences sharedPreferences = getSharedPreferences("item_data", Context.MODE_PRIVATE);
-        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        for (Item item : itemList) {
-
-            int w = item.getDayOfWeek();
-
-            int t = item.deadline[3];
-
-            editor.putString(w + "_" + t + "_title", item.title);
-            editor.putString(w + "_" + t + "_content", item.content);
-            editor.putString(w + "_" + t + "_deadline_year", String.valueOf(item.deadline[0]));
-            editor.putString(w + "_" + t + "_deadline_month", String.valueOf(item.deadline[1]));
-            editor.putString(w + "_" + t + "_deadline_day", String.valueOf(item.deadline[2]));
-            editor.putString(w + "_" + t + "_deadline_hour", String.valueOf(item.deadline[3]));
-            editor.putString(w + "_" + t + "_deadline_minute", String.valueOf(item.deadline[4]));
-            editor.putInt(w + "_" + t + "_importance", item.importance);
-
+        int itemNum = itemList.size();
+        editor.putInt("Item number", itemNum);
+        for (int i = 0; i < itemNum; ++i) {
+            editor.putString("item" + i, itemList.get(i).toJsonString());
         }
         editor.apply();
     }
 
     public List<Item> readListFromFile() {
-        SharedPreferences sharedPreferences = getSharedPreferences("item_data", Context.MODE_PRIVATE);
-
         List<Item> itemList = new ArrayList<>();
-        String[] weekdays = {"0", "1", "2", "3", "4", "5", "6"};
-        String[] times = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
-                "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
 
-        for (String w : weekdays) {
-            for (String t : times) {
-                String title = sharedPreferences.getString(w + "_" + t + "_title", "");
-                if (title.equals("")) continue;
-                String content = sharedPreferences.getString(w + "_" + t + "_content", "");
-
-                int[] deadline = new int[5];
-                deadline[0] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_year", "0"));
-                deadline[1] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_month", "0"));
-                deadline[2] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_day", "0"));
-                deadline[3] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_hour", "0"));
-                deadline[4] = Integer.parseInt(sharedPreferences.getString(w + '_' + t + "_deadline_minute", "0"));
-
-                int importance = sharedPreferences.getInt(w + "_" + t + "_importance", -1);
-
-                itemList.add(new Item(title, content, deadline, importance));
-            }
-
+        int itemNum = sharedPreferences.getInt("Item number", 0);
+        for (int i = 0; i < itemNum; ++i) {
+            String s = sharedPreferences.getString("item" + i, "");
+            itemList.add(Item.parseJson(s));
         }
-        return itemList;
 
+        return itemList;
     }
 
 }
