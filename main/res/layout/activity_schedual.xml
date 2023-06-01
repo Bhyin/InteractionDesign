@@ -84,13 +84,12 @@
         android:layout_marginBottom="60sp"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/test_week_view_navigation"
+        android:id="@+id/week_view_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/light_green"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        android:background="@color/white"
+        app:itemTextColor="@color/dark_black"
         app:menu="@menu/navigation" />
 
 

@@ -64,9 +64,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/tea"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        android:background="@color/white"
+        app:itemTextColor="@color/dark_black"
         app:menu="@menu/navigation" />
 
 </RelativeLayout>

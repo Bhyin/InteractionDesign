@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="确认"
+            android:text="@string/yes"
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="关闭"
+            android:text="@string/no"
             style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>

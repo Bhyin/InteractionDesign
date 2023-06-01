@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="删除"/>
+            android:text="@string/delete"/>
 
         <Button
             android:id="@+id/return_button"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:gravity="center"
-            android:text="返回"/>
+            android:text="@string/return_"/>
 
     </LinearLayout>
 

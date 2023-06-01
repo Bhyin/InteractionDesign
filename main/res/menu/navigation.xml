@@ -2,18 +2,15 @@
     <item
         android:id="@+id/menu_todo"
         android:title="@string/to_do"
-        android:icon="@color/white"/>
+        android:icon="@mipmap/todo_view_foreground"/>
 
     <item
         android:id="@+id/menu_schedule"
         android:title="@string/schedule"
-        android:icon="@color/white"/>
+        android:icon="@mipmap/week_view_foreground"/>
 
     <item
         android:id="@+id/menu_setup"
         android:title="@string/setup"
-        android:icon="@color/white"/>
-
-
-
+        android:icon="@mipmap/setting_view_foreground"/>
 </menu>

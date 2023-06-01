@@ -9,16 +9,18 @@
         android:id="@+id/title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="标题"
+        android:autofillHints=""
         android:gravity="center"
+        android:hint="@string/item_title"
         android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/content_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="待办内容"
+        android:autofillHints=""
         android:gravity="center"
+        android:hint="@string/item_content"
         android:minHeight="48dp" />
 
     <TextView
@@ -26,39 +28,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:minHeight="48sp"/>
+        android:minHeight="48sp" />
 
     <Button
         android:id="@+id/add_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="添加日期"
         android:gravity="center"
-        android:textSize="24sp"/>
+        android:text="@string/item_deadline"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/time_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:minHeight="48sp"/>
+        android:minHeight="48sp" />
 
     <Button
         android:id="@+id/add_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="添加时间"
-        android:textSize="24sp"/>
+        android:text="@string/deadline"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/add_importance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="重要性"
-        android:textSize="24sp"
-        />
+        android:text="@string/item_importance"
+        android:textSize="24sp" />
 
     <SeekBar
         android:id="@+id/seek_bar"
@@ -75,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="确认" />
+            android:text="@string/yes" />
 
         <Button
             android:id="@+id/cancel_button"
@@ -83,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="120dp"
             android:gravity="center"
-            android:text="取消" />
+            android:text="@string/no" />
     </RelativeLayout>
 
 </LinearLayout>
