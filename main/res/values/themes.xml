@@ -2,12 +2,12 @@
     <!-- Base application theme. -->
     <style name="Theme.TODO" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/tea</item>
-        <item name="colorPrimaryVariant">@color/tea</item>
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorPrimaryVariant">@color/light_green</item>
         <item name="colorOnPrimary">@color/tea</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/tea</item>
-        <item name="colorSecondaryVariant">@color/tea</item>
+        <item name="colorSecondary">@color/dark_green</item>
+        <item name="colorSecondaryVariant">@color/light_green</item>
         <item name="colorOnSecondary">@color/tea</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>

@@ -6,21 +6,25 @@
     <string name="to_do">待办</string>
     <string name="schedule">日程</string>
     <string name="setup">设置</string>
-    <string name="file_name">todo.do</string>
 
+    // 用于数据存取
+    <string name="preference_name">item_data</string>
 
     // 待办窗口的一些名称
-    <string name="deadline">截止日期</string>
+    <string name="deadline">截止时间</string>
     <string name="importance">重要性</string>
     <string name="add_item">添加待办</string>
     <string name="item_title">标题</string>
     <string name="item_content">内容</string>
     <string name="item_deadline">截止日期</string>
-    <string name="item_sign_date">任务开始时间</string>
     <string name="item_importance">重要性</string>
     <string name="yes">确认</string>
     <string name="no">取消</string>
+    <string name="delete">删除</string>
+    <string name="return_">返回</string>
     <string name="sort_option">排序方式</string>
+    <string name="descending">升序</string>
+    <string name="not_descending">降序</string>
 
     // 日程窗口的一些名称
     <string name="year">年</string>
