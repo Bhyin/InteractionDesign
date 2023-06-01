@@ -56,7 +56,7 @@ public class WeekViewItemAdapter extends ArrayAdapter<WeekViewItem> {
             Item item = weekViewItem.items[i];
             if (item != null) {
                 // 设置textview的内容
-                w[i].setText(item.title + position + i);
+                w[i].setText(item.title);
 
                 // 按照紧急程度设置textview的颜色
                 w[i].setBackgroundColor(Item.imp_clr[item.importance]);

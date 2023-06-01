@@ -19,6 +19,7 @@ public class Json {
     }
 
     public String toString() {
+        // 生成json字符串
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -33,6 +34,7 @@ public class Json {
     }
 
     public static Json parse(String json) {
+        // 解析json字符串
         Json result = new Json();
         json = json.trim();
         if (json.startsWith("{") && json.endsWith("}")) {

@@ -23,13 +23,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
     private final List<Item> itemList;
 
-//    private int[] importanceColors;
-
 
     public ItemAdapter(@NonNull Context context, List<Item> itemList) {
         super(context, 0, itemList);
         this.context = context;
         this.itemList = itemList;
+
     }
 
     @NonNull
@@ -39,24 +38,15 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             convertView = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
         }
 
-//        importanceColors = new int[5];
-//        float[] temp = new float[3];
-//
-//        // 为不同的importance设置不同的颜色
-//        for (int i = 0; i < 5; i++) {
-//            temp[0] = 30 * i;
-//            temp[1] = 100;
-//            temp[2] = 100;
-//            importanceColors[i] = Color.HSVToColor(temp);
-//        }
-
-//        System.out.println("颜色列表如下所示");
-//        for (int i = 0; i < 5; ++i) {
-//            System.out.println("第" + i + "个颜色是：" + importanceColors[i]);
-//        }
+        Item item = itemList.get(position);
 
         // 设置渐变的颜色
-        final int[] gradientColor = {Item.imp_clr[itemList.get(position).importance], Color.WHITE};
+        final int[] gradientColor;
+        if (item.isFinished) {
+            gradientColor = new int[]{Color.GRAY, Color.WHITE};
+        } else {
+            gradientColor = new int[]{Item.imp_clr[item.importance], Color.WHITE};
+        }
         final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
         convertView.setBackground(gradientDrawable);
 
@@ -72,11 +62,15 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                     final int[] gradientColor = {Color.GRAY, Color.WHITE};
                     final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
                     finalConvertView.setBackground(gradientDrawable);
+                    item.isFinished = true;
+                    SortItemList.sort(itemList);
                 } else {
                     // 设置渐变的颜色
                     final int[] gradientColor = {Item.imp_clr[itemList.get(position).importance], Color.WHITE};
                     final GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, gradientColor);
                     finalConvertView1.setBackground(gradientDrawable);
+                    item.isFinished = false;
+                    SortItemList.sort(itemList);
                 }
             }
         });
@@ -85,8 +79,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView title = convertView.findViewById(R.id.left_text);
         TextView deadline = convertView.findViewById(R.id.right_text);
 
-        title.setText(itemList.get(position).title);
-        deadline.setText(itemList.get(position).CountTimeStr());
+        title.setText(item.title);
+        deadline.setText(item.CountTimeStr());
         return convertView;
     }
 }

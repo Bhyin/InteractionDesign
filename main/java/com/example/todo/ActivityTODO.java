@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -27,36 +28,22 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 public class ActivityTODO extends AppCompatActivity {
-    // 下拉选项框
-    private Spinner sortSpinner;
-    // 升序/降序切换
-    private ToggleButton toggleButton;
-    private ListView listView;
-    // 条目列表
-    private List<Item> itemList;
-    // 列表适配器
-    private ItemAdapter adapter;
-    // 是否降序
-    private boolean isDescending = false;
-    // 底部导航栏
-    private BottomNavigationView bottomNavigationView;
-
-    // 输入按钮
+    private Spinner sortSpinner; // 下拉选项框
+    private List<Item> itemList; // 条目列表
+    public ItemAdapter adapter; // 列表适配器
+    public boolean isDescending = false; // 是否降序
     private EditText titleEditText; // 输入标题
     private EditText contentEditText; // 输入内容
-    private Button addDate;
-    private Button addTime;
     private SeekBar seekBar;// 重要性选择滑动条
-    private Button addButton;// 添加按钮
 
     // 提醒功能
     private AlarmManager alarmManager;
@@ -71,16 +58,16 @@ public class ActivityTODO extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
 
+        // 初始化
         initSharedPreferences();
+
+        initColors();
 
         // 初始化数据
         initData();
 
         // 初始化控件
         initView();
-
-        // 初始化列表
-        initListView();
     }
 
     void initSharedPreferences() {
@@ -88,13 +75,20 @@ public class ActivityTODO extends AppCompatActivity {
         editor = sharedPreferences.edit();
     }
 
+    void initColors() {
+        Item.imp_clr = new int[]{
+                ContextCompat.getColor(this, R.color.tea),
+                ContextCompat.getColor(this, R.color.light_blue),
+                ContextCompat.getColor(this, R.color.light_yellow),
+                ContextCompat.getColor(this, R.color.dark_yellow),
+                ContextCompat.getColor(this, R.color.light_red)
+        };
+    }
+
 
     private void initData() {
         itemList = readListFromFile();
-//        itemList.add(new Item("aaa", "aaaaa", new int[]{1, 2, 3, 4, 5}, 0));
-//        itemList.add(new Item("bbb", "bbbbb", new int[]{12, 4, 12, 12, 52}, 3));
-//        itemList.add(new Item("ccc", "ccccc", new int[]{18, 8, 28, 18, 58}, 4));
-        System.out.println("Read File" + itemList.size());
+
         Calendar calendar = Calendar.getInstance();
 
         // 为每一个条目设置闹钟
@@ -125,21 +119,15 @@ public class ActivityTODO extends AppCompatActivity {
     }
 
     private void initView() {
-        sortSpinner = findViewById(R.id.sort_spinner);
-        toggleButton = findViewById(R.id.sort_toggle);
-        listView = findViewById(R.id.item_list);
-        bottomNavigationView = findViewById(R.id.todo_navigation);
-        addButton = findViewById(R.id.add_button);
-
-
         // 设置下拉选项框的选项
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
                 ActivityTODO.this,
                 R.array.sort_options,
                 androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
         arrayAdapter.setDropDownViewResource(androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(arrayAdapter);
 
+        sortSpinner = findViewById(R.id.sort_spinner);
+        sortSpinner.setAdapter(arrayAdapter);
         // 下拉选项框的选择事件
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -153,7 +141,8 @@ public class ActivityTODO extends AppCompatActivity {
             }
         });
 
-        // 切换按钮的点击事件
+        // 升序/降序切换按钮
+        ToggleButton toggleButton = findViewById(R.id.sort_toggle);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,15 +151,19 @@ public class ActivityTODO extends AppCompatActivity {
             }
         });
 
-        // 单个条目的点击事件
+        // 列表视图
+        ListView listView = findViewById(R.id.item_list);
+        adapter = new ItemAdapter(ActivityTODO.this, itemList);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                showItemDialog(position);
+                showItemDialog(position);// 点击单个条目时，弹出窗口显示条目的具体信息
             }
         });
 
-        // 底部菜单栏的点击事件
+        // 底部导航栏
+        BottomNavigationView bottomNavigationView = findViewById(R.id.todo_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -179,10 +172,12 @@ public class ActivityTODO extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menu_todo:
                         closeAlarm();
+                        saveListToFile();
                         return true;
                     case R.id.menu_schedule:
-                        saveListToFile();
+                        saveListToFile(); // 保存数据
                         closeAlarm();
+                        System.out.println("Start schedule");
                         intent = new Intent(ActivityTODO.this, ActivitySchedule.class);
                         startActivity(intent);
                         return true;
@@ -198,13 +193,16 @@ public class ActivityTODO extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.menu_todo); // 底部菜单栏默认选择待办页面
 
-        // 添加按钮的点击事件
+        // 添加按钮
+        ImageButton addButton = findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showCustomDialog();
             }
         });
+
+        sortData(sortSpinner.getSelectedItemPosition());
     }
 
 
@@ -219,11 +217,13 @@ public class ActivityTODO extends AppCompatActivity {
         TextView deadline = dialog.findViewById(R.id.item_deadline);
         TextView importance = dialog.findViewById(R.id.item_importance);
 
-        title.setText(itemList.get(position).title);
-        content.setText(itemList.get(position).content);
+        Item item = itemList.get(position);
 
-        deadline.setText(itemList.get(position).getDeadLineStr());
-        importance.setText(Item.imp_str[itemList.get(position).importance]);
+        title.setText(item.title);
+        content.setText(item.content);
+
+        deadline.setText(item.getDeadLineStr());
+        importance.setText(Item.imp_str[item.importance]);
 
         Button deleteButton = dialog.findViewById(R.id.delete_button);
         Button returnButton = dialog.findViewById(R.id.return_button);
@@ -257,8 +257,8 @@ public class ActivityTODO extends AppCompatActivity {
         // 获取提示框控件
         titleEditText = dialog.findViewById(R.id.title_edit_text);
         contentEditText = dialog.findViewById(R.id.content_edit_text);
-        addDate = dialog.findViewById(R.id.add_date);
-        addTime = dialog.findViewById(R.id.add_time);
+        Button addDate = dialog.findViewById(R.id.add_date);
+        Button addTime = dialog.findViewById(R.id.add_time);
         seekBar = dialog.findViewById(R.id.seek_bar);
 
         // 用于显示当前选择的日期和时间
@@ -267,12 +267,13 @@ public class ActivityTODO extends AppCompatActivity {
 
         // 选择日期和时间
         final Calendar c = Calendar.getInstance();
-        final int[] tYear = {c.get(Calendar.YEAR)};
-        final int[] tMonth = {c.get(Calendar.MONTH)};
-        final int[] tDay = {c.get(Calendar.DAY_OF_MONTH)};
+        int tYear = c.get(Calendar.YEAR);
+        int tMonth = c.get(Calendar.MONTH);
+        int tDay = c.get(Calendar.DAY_OF_MONTH);
 
-        dateView.setText(tYear[0] + ":" + tMonth[0] + ":" + tDay[0]);
+        dateView.setText(tYear + ":" + (tMonth + 1) + ":" + tDay);
 
+        int[] deadline = new int[5];
         addDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,22 +283,21 @@ public class ActivityTODO extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         // 选择日期之后的操作
-                        tYear[0] = year;
-                        tMonth[0] = month;
-                        tDay[0] = dayOfMonth;
-
-                        dateView.setText(tYear[0] + ":" + tMonth[0] + ":" + tDay[0]);
+                        deadline[0] = year;
+                        deadline[1] = month;
+                        deadline[2] = dayOfMonth;
+                        dateView.setText(deadline[0] + ":" + (deadline[1] + 1) + ":" + deadline[2]);
                     }
-                }, tYear[0], tMonth[0], tDay[0]);
+                }, tYear, tMonth, tDay);
                 datePickDialog.show();
             }
         });
 
 
-        final int[] tHour = {c.get(Calendar.HOUR_OF_DAY)};
-        final int[] tMinute = {c.get(Calendar.MINUTE)};
+        int tHour = c.get(Calendar.HOUR_OF_DAY);
+        int tMinute = c.get(Calendar.MINUTE);
 
-        timeView.setText(tHour[0] + ":" + tMinute[0]);
+        timeView.setText(tHour + ":" + tMinute);
 
         addTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,21 +306,14 @@ public class ActivityTODO extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                tHour[0] = hourOfDay;
-                                tMinute[0] = minute;
-                                timeView.setText(tHour[0] + ":" + tMinute[0]);
+                                deadline[3] = hourOfDay;
+                                deadline[4] = minute;
+                                timeView.setText(deadline[3] + ":" + deadline[4]);
                             }
-                        }, tHour[0], tMinute[0], true);
+                        }, tHour, tMinute, true);
                 timePickerDialog.show();
             }
         });
-
-        int[] deadline = new int[5];
-        deadline[0] = tYear[0];
-        deadline[1] = tMonth[0];
-        deadline[2] = tDay[0];
-        deadline[3] = tHour[0];
-        deadline[4] = tMinute[0];
 
         // 设置seekbar的最大值和初始值
         seekBar.setMax(4);
@@ -391,31 +384,11 @@ public class ActivityTODO extends AppCompatActivity {
     }
 
 
-    private void initListView() {
-        adapter = new ItemAdapter(ActivityTODO.this, itemList);
-        listView.setAdapter(adapter);
-    }
-
     private void sortData(int position) {
-        switch (position) {
-            case 0:// 按照deadline排序
-                itemList.sort(new Comparator<Item>() {
-                    @Override
-                    public int compare(Item item, Item t1) {
-                        return isDescending ? item.isEarly(t1.deadline) : t1.isEarly(item.deadline);
-                    }
-                });
-                break;
-            case 1:// 按照重要性排序
-                itemList.sort(new Comparator<Item>() {
-                    @Override
-                    public int compare(Item item, Item t1) {
-                        return isDescending ? item.importance - t1.importance : t1.importance - item.importance;
-                    }
-                });
-                break;
-        }
-        adapter.notifyDataSetChanged();
+        SortItemList.isDescending = isDescending;
+        SortItemList.adapter = adapter;
+        SortItemList.position = position;
+        SortItemList.sort(itemList);
     }
 
 
